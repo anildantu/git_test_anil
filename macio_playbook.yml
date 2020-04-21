@@ -1,0 +1,24 @@
+---
+
+   - name: Running playbook to query https://macaddress.io/ via API
+     hosts: localhost
+     gather_facts: false
+     vars_prompt:
+               - name: mac_address
+                 prompt: "\nWelcome to https://macaddress.io \n\n Enter the Mac address:"
+                 private: no
+
+     tasks:
+
+          - name: Accessing url -
+           # shell: curl -XGET "https://api.macaddress.io/v1?apiKey=at_5mfP29g7YO3qcSKfReoTy1ylso0Ta&output=json&search={{ mac_address }}"
+            uri:
+                url: 'https://api.macaddress.io/v1?apiKey=at_5mfP29g7YO3qcSKfReoTy1ylso0Ta&output=json&search={{ mac_address }}'
+                method: XGET
+                return_content: yes
+            register: web
+
+          - debug:
+                msg: "Entered Mac-address:'{{ mac_address }}' belongs to Company: '{{ web.json.vendorDetails.companyName }}'"
+       
+    
